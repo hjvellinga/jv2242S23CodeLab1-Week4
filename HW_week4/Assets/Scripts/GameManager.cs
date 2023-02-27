@@ -40,19 +40,23 @@ public class GameManager : MonoBehaviour
     //when making a const variable, write identifier first and THEN specifications
     
     //WEEK 4
-    public TextMeshProUGUI scoreText; 
-    
+    public TextMeshProUGUI scoreText;
+    private bool inGame = true; 
     public int Score
     {
-        get { return score; }
+        get
+        {
+            return score; 
+            
+        }
         set
         {
             score = value; 
             Debug.Log(message: "SCORE CHANGED");
 
-            if (score > HighScore) //if the current score is higher than the high score
+            if (score > HighScore) //if the current score is higher than the high score TODO REMOVE this if statement ?? 
             {
-                HighScore = score; //change the high score to current score
+                HighScore = score; //change the high score to current score TODO REMOVE?? 
             }
         }
     }
@@ -123,6 +127,7 @@ public class GameManager : MonoBehaviour
                 playerOne.transform.position = originalPosPl1; //reset position Player 1.
                 playerTwo.transform.position = originalPosPl2; //reset position Player 2. 
                 GetComponent<TimerScript>().timerActive = true; //reset timerActive bool so timer starts counting again
+                //TODO FREEZE TIMER VALUE WHEN PLAYERS COLLIDE
             }
 
 
