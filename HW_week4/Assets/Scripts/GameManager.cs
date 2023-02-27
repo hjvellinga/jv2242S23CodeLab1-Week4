@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using TMPro; 
 using System.IO;
 using System.Net.Mime;
+using Unity.VisualScripting;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Application = UnityEngine.Device.Application;
@@ -54,33 +55,24 @@ public class GameManager : MonoBehaviour
             score = value; 
             Debug.Log(message: "SCORE CHANGED");
 
-            if (score > HighScore) //if the current score is higher than the high score TODO REMOVE this if statement ?? 
-            {
-                HighScore = score; //change the high score to current score TODO REMOVE?? 
-            }
+          //  if (score > HighScore) //if the current score is higher than the high score TODO REMOVE this if statement ?? 
+          //  {
+          //      HighScore = score; //change the high score to current score TODO REMOVE?? 
+          //  }
         }
     }
 
     private int highScore = 2;
 
+    public List<int> highScores = new List<int>();
+    private string FILE_PATH;
+    private const string FILE_DIR = "/Data/";
+    private const string FILE_NAME = "highScores.txt"; 
+
     [Header("Load Scene Delay")] 
     private float delayBeforeLoading = 5f;
-    private float timeElapsed; 
+    private float timeElapsed;
 
-    public int HighScore
-    {
-        get { return highScore; }
-        set
-        {
-            highScore = value;
-            Debug.Log(message: "NEW HIGH SCORE");
-            Directory.CreateDirectory(Application.dataPath + DIR_DATA); 
-            //SAVE HS HERE: now we're creating a space for STORAGE of small data chunks between plays --
-            //DATA PERSISTENCE by using Player Preferences. Can only save 3 types of things - strings, integers and floats
-            File.WriteAllText(PATH_HIGH_SCORE, "" + highScore); //don't forget to refresh unity files when you make changes in the file system through code;
-            //turning INT into string by writing <"" + int>
-        }
-    }
     void Awake()
     {
         if (Instance == null)  //if instance has not been set to anything yet
@@ -100,13 +92,11 @@ public class GameManager : MonoBehaviour
         originalPosPl1 = playerOne.transform.position;
         originalPosPl2 = playerTwo.transform.position;
         
-       //WEEK 3
-        PATH_HIGH_SCORE = Application.dataPath + DIR_DATA + FILE_HIGH_SCORE; //takes us to assets folder + to the specific folder + to the file
+        //reset timer
+        GetComponent<TimerScript>().currentTime = 0;
 
-        if (File.Exists(PATH_HIGH_SCORE))
-        {
-            HighScore = Int32.Parse(File.ReadAllText(PATH_HIGH_SCORE)); //Int32.Parse changes INT into string
-        }
+        //WEEK 3
+        FILE_PATH = Application.dataPath + FILE_DIR + FILE_NAME;
     }
 
     // Update is called once per frame
@@ -129,20 +119,71 @@ public class GameManager : MonoBehaviour
                 GetComponent<TimerScript>().timerActive = true; //reset timerActive bool so timer starts counting again
                 //TODO FREEZE TIMER VALUE WHEN PLAYERS COLLIDE
             }
+            
 
 
         }
         
         //WEEK 4
-        scoreText.text = 
-            "score: " + score + "\n" +
-            "high score: " + HighScore;
 
         void UpdateHighScores()
         {
+            if (highScores.Count == 0)
+            {
+                //if we have high scores stored in the datafile 
+                if (File.Exists(FILE_PATH))
+                {
+                    string fileContents = File.ReadAllText(FILE_PATH); //distill as string
+                    
+                    //turn string into an array
+                    string[] fileSplit = fileContents.Split('\n');
+                    //go through all strings that are numbers
+                    for (int i = 1; i < fileSplit.Length - 1; i++)
+                    {
+                        //and add the distilled numbers to the HighScores list
+                        highScores.Add(Int32.Parse(fileSplit[i]));
+                    }
+                }
+                else
+                {
+                    //insert placeholder highscore 
+                    highScores.Add(0);
+                }
+            }
+            //inserting our score into the high scores list, if it's large enough
+            for (int i = 0; i < highScores.Count; i++) //TODO what on earth are for loops & how do arrays work exactly? ASK BRACKEYS
+            {
+                if (highScores[i] < Score)
+                {
+                    highScores.Insert(i, Score);
+                    break;
+                }
+            }
+
+            if (highScores.Count > 5) //if we have more than 5 high scores in the highScores list
+            {
+                highScores.RemoveRange(5, highScores.Count - 5); //cut it to 5 high scores
+            }
             
+            //make string of our high scores -- not sure what's going on here with the for loop. Again LOOK EM UP
+            string highScoreStr = "High Scores: \n";
+
+            for (int i = 0; i < highScores.Count; i++)
+            {
+                highScoreStr += highScores[i] + "\n"; //we take out the values of the integers in the array and turn them into strings to be displayed in the text element? 
+            }
+            //display high scores 
+            scoreText.text = 
+                "score: " + score + "\n" +
+                highScoreStr; 
+            
+            File.WriteAllText(FILE_PATH, highScoreStr); //I guess this refreshes the txt file?? 
         }
         
 
     }
 }
+//as for the high scores, I need a high score per level. 
+//tomorrow watch: https://www.youtube.com/watch?v=XOjd_qU2Ido (save and load systems in Unity) (18 mins) 
+//and https://www.youtube.com/watch?v=YiE0oetGMAg Arrays (or https://www.youtube.com/watch?v=Q16KIxtomeo Loops & Arrays) (20 mins)
+//and https://www.youtube.com/watch?v=9ozOSKCiO0I loops (18 mins)

@@ -5504,7 +5504,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &846908334
 GameObject:
@@ -10494,8 +10494,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1586060152}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1586060150
 GameObject:
@@ -10534,6 +10534,7 @@ MonoBehaviour:
   originalPosPl1: {x: 0, y: 0}
   originalPosPl2: {x: 0, y: 0}
   scoreText: {fileID: 442870122}
+  highScores: 
 --- !u!4 &1586060152
 Transform:
   m_ObjectHideFlags: 0
@@ -10545,7 +10546,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1876160031}
+  - {fileID: 1344150793}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10564,6 +10567,7 @@ MonoBehaviour:
   timerText: {fileID: 535606342}
   currentTime: 0
   countDown: 0
+  timerActive: 1
 --- !u!1 &1672604113
 GameObject:
   m_ObjectHideFlags: 0
@@ -10805,8 +10809,8 @@ RectTransform:
   m_Children:
   - {fileID: 535606341}
   - {fileID: 442870121}
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_Father: {fileID: 1586060152}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
